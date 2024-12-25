@@ -1,0 +1,28 @@
+name: Check Python Comments on Push  # Name of your workflow
+
+on:  # Define the event that triggers the workflow
+  push:
+    branches:
+      - main  # Trigger this workflow when code is pushed to the 'main' branch
+
+jobs:  # Define the job that will be executed
+  check-comments:
+    runs-on: ubuntu-latest  # Run the job on an Ubuntu machine
+
+    steps:  # Define the steps the job will perform
+      - name: Checkout code
+        uses: actions/checkout@v2  # Action to checkout the code from your repository
+
+      - name: Set up Python
+        uses: actions/setup-python@v2  # Action to set up Python on the machine
+
+      - name: Install dependencies
+        run: |
+          pip install flake8  # Install flake8, a Python linter
+
+      - name: Check for comments in Python files
+        run: |
+          for file in $(find . -name "*.py"); do  # Find all Python files
+            echo "Checking file: $file"
+            grep -n "^#" "$file"  # Check if the file contains comments (lines starting with '#')
+          done
